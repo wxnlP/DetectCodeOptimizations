@@ -15,11 +15,87 @@
   --可自行按需修改
 ```
 
+## 下载源文件
+
+打开Linux终端，克隆源码
+
+```shell
+git clone https://github.com/wxnlP/DetectCodeOptimizations.git
+```
+
+将<kbd>detect.py</kbd>和<kbd>Data.py</kbd>放到自己的工程文件夹根目录，安装依赖
+
+```shell
+#更新系统包列表
+sudo apt update
+#安装opencv-python
+pip install opencv-python
+#若opencv报关于GStreamer的错，可选择安装包含FFmpeg、GStreamer的完整版本
+pip install opencv-python-headless
+#安装numpy
+pip install numpy
+#安装onnxruntime
+pip install onnxruntime
+#安装pyserial
+pip install pyserial
+```
+
+终端检验安装
+
+```shell
+python3 -c "import cv2, numpy, onnxruntime, serial; print('All libraries loaded successfully')"
+```
+
 ## detect.py使用方法
 
-### 使用简介
+### 初始化
 
-将<kbd>detect.py</kbd>放到工程根目录，<kbd>from detect import Detect</kbd>即可：
+根据自己的文件目录修改必要参数
+
+```python
+from detect import Detect
+# 创建对象
+APP = Detect()
+# 初始化个性参数
+APP.model_pb_path = "Your ONNX file's path" # Linux要求使用绝对路径
+APP.label_key = list(range(num))  # num--你的模型的标签的个数（或者说标签ID）
+APP.lable_value = ["", "",....]   # num--标签ID对应的标签名称
+```
+
+默认参数如下
+
+```python
+labels = [
+        "0-plastic_bottle",
+        "0-drink_can",
+        "0-paper",
+        "0-carton",
+        "0-milkCarton",
+        "1-pericarp",
+        "1-vegetable_leaf",
+        "1-radish",
+        "1-potato",
+        "1-fruits",
+        "2-battery",
+        "2-Expired_drug",
+        "2-button cell",
+        "2-thermometer",
+        "3-tile",
+        "3-cobblestone",
+        "3-brick",
+        "3-paperCup",
+        "3-tableware",
+        "3-chopsticks",
+        "3-butt",
+        "3-mask"]
+self.model_pb_path = "/home/sunrise/DefectDetect/G_final.onnx"
+self.label_key = list(range(22))
+self.lable_value = labels
+```
+
+### 使用方法
+
+将<kbd>detect.py</kbd>和<kbd>Data.py</kbd>放到工程根目录，<kbd>from detect import Detect</kbd>即可：
 
 ```python
 from detect import Detect
@@ -50,16 +126,16 @@ while True:
 
 ```python
  """照片处理示例"""
-    # img = cv2.imread("/home/sunrise/DefectDetect/pic/test.jpg")
-    # APP.detect_pic(img)
+    img = cv2.imread("/home/sunrise/DefectDetect/pic/test.jpg")
+    APP.detect_pic(img)
 ```
 
 ### 视频处理
 
 ```python
  """视频处理示例"""
-    # cap = cv2.VideoCapture('/home/sunrise/DefectDetect/videos/2.mp4')
-    # APP.detect_video('/home/sunrise/DefectDetect/videos/2.mp4')
+    cap = cv2.VideoCapture('/home/sunrise/DefectDetect/videos/2.mp4')
+    APP.detect_video('/home/sunrise/DefectDetect/videos/2.mp4')
 ```
 
 
